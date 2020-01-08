@@ -4,7 +4,7 @@ FROM '/csv/country.csv' DELIMITER ',' CSV HEADER;
 /*  
     temporary workaround
     create temporary table with iso, for creating 
-    join table which should be inserted to city table.
+    joined table which should be inserted to city table.
 */
 
 CREATE TABLE test_db_city_tmp (
