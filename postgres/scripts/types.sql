@@ -3,8 +3,10 @@ SET search_path TO public;
 GRANT USAGE ON SCHEMA public TO PUBLIC;
 GRANT CREATE ON SCHEMA public TO PUBLIC;
 
-CREATE TYPE content_type AS ENUM ('article', 'decentien');
-CREATE TYPE media_type AS ENUM ('image', 'gif', 'video', 'music');
+CREATE TYPE requestStatus AS ENUM ('open', 'pending', 'completed', 'rejected', 'closed');
+CREATE TYPE userType AS ENUM ('admin', 'pilot', 'operator');
+CREATE TYPE licenceType AS ENUM ('license_1');
+CREATE TYPE visaType AS ENUM ('visa_1');
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 

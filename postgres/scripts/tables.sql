@@ -8,63 +8,107 @@ CREATE TABLE test_db_country (
 CREATE TABLE test_db_city (
     id          BIGINT      DEFAULT nextval('test_db_city_id_seq'::regclass) NOT NULL PRIMARY KEY,
     name        CHAR(50)    NOT NULL,
-    latitude    float       NOT NULL,
-    longitude   float       NOT NULL,
+    latitude    FLOAT       NOT NULL,
+    longitude   FLOAT       NOT NULL,
     country_id  SMALLINT    NOT NULL REFERENCES test_db_country(id)
+);
+
+CREATE TABLE test_db_role (
+    id          UUID        DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    user_role   userType    NOT NULL
 );
 
 CREATE TABLE test_db_user (
 	id	        UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
-	name    	VARCHAR(50)	    NOT NULL,
-    surname    	VARCHAR(50)	    NOT NULL,
+	name    	VARCHAR(200)	NOT NULL,
+    surname    	VARCHAR(200)	NOT NULL,
     phone       CHAR(15)        NOT NULL,
     email       CHAR(50)        NOT NULL,
-    city_id     BIGINT          NOT NULL REFERENCES test_db_city(id),
     created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	password    VARCHAR(32) 	NOT NULL
+	password    VARCHAR(100) 	NOT NULL,
+    role_id     UUID            NOT NULL REFERENCES test_db_role(id)
 );
 
-CREATE TABLE test_db_content (
-    id	        UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
-    type        content_type    NOT NULL,
-    creator_id  UUID            NOT NULL    REFERENCES test_db_user(id),
-    likes       BIGINT          NOT NULL,
-    dislikes    BIGINT          NOT NULL,
-    created_at  TIMESTAMP       DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    data        OID             NOT NULL
+CREATE TABLE test_db_operator (
+    id	            UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    company_name    VARCHAR(200)    NOT NULL,
+    city_id         BIGINT          NOT NULL REFERENCES test_db_city(id),
+    user_id         UUID            NOT NULL REFERENCES test_db_user(id)
 );
 
-CREATE TABLE test_db_content_like_bridge (
-    created     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    user_id     UUID        NOT NULL REFERENCES test_db_user(id),
-    content_id  UUID        NOT NULL REFERENCES test_db_content(id),
-    likes       BOOL        NOT NULL
+CREATE TABLE test_db_pilot (
+    id	                UUID        DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    busy                BOOLEAN     NOT NULL,
+    current_location    BIGINT      NOT NULL REFERENCES test_db_city(id),
+    user_id             UUID        NOT NULL REFERENCES test_db_user(id)
 );
 
-CREATE TABLE test_db_media (
-    id	        UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
-    type        media_type      NOT NULL,
-    data        OID             NOT NULL
+CREATE TABLE test_db_plane (
+    id                      UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    name                    VARCHAR(200)    NOT NULL,
+    registration_prefix     CHAR(7)         NOT NULL,
+    registration_id         CHAR(30)        NOT NULL,
+    plane_type              VARCHAR(50)     NOT NULL,
+    current_location        BIGINT          NOT NULL REFERENCES test_db_city(id)
 );
 
-CREATE TABLE test_db_media_content_bridge (
-    created_at  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    content_id  UUID        NOT NULL REFERENCES test_db_content(id),
-    media_id    UUID        NOT NULL REFERENCES test_db_media(id)
+CREATE TABLE test_db_operator_plane_bridge (
+    plane_id        UUID    NOT NULL REFERENCES     test_db_plane(id),
+    operator_id     UUID    NOT NULL REFERENCES     test_db_operator(id)
 );
 
-CREATE TABLE test_db_comment (
-    id	        UUID        DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
-    user_id     UUID        NOT NULL REFERENCES test_db_user(id),
-    content_id  UUID        NOT NULL REFERENCES test_db_content(id),
-    likes       BIGINT      NOT NULL,
-    dislikes    BIGINT      NOT NULL,
-    created_at  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP 
+CREATE TABLE test_db_license (
+    id              UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    name            VARCHAR(50)     NOT NULL,
+    license_type    licenceType     NOT NULL,
+    image           OID             NOT NULL,
+    is_active       BOOLEAN         NOT NULL DEFAULT FALSE,
+    pilot_id        UUID            NOT NULL REFERENCES     test_db_pilot(id)
 );
 
-CREATE TABLE test_db_comment_like_bridge (
-    created_at  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-    user_id     UUID        NOT NULL REFERENCES test_db_user(id),
-    comment_id  UUID        NOT NULL REFERENCES test_db_comment(id),
-    likes       BOOL        NOT NULL
+CREATE TABLE test_db_visa (
+    id              UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    name            VARCHAR(50)     NOT NULL,
+    visa_type       visaType        NOT NULL,
+    image           OID             NOT NULL,
+    is_active       BOOLEAN         NOT NULL DEFAULT FALSE,
+    pilot_id        UUID            NOT NULL REFERENCES     test_db_pilot(id)
+);
+
+CREATE TABLE test_db_pilot_rating (
+    id              UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    likes           INTEGER         NOT NULL DEFAULT 0,
+    dislikes        INTEGER         NOT NULL DEFAULT 0,
+    pilot_id        UUID            NOT NULL REFERENCES     test_db_pilot(id)        
+);
+
+CREATE TABLE test_db_destination_info (
+    id                  UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    from_id             BIGINT          NOT NULL REFERENCES test_db_city(id),
+    from_latitude       FLOAT           NULL,
+    from_longitude      FLOAT           NULL,
+    to_id               BIGINT          NOT NULL REFERENCES test_db_city(id),
+    to_latitude         FLOAT           NULL,
+    to_longitude        FLOAT           NULL,
+    plane_id            UUID            NOT NULL REFERENCES test_db_plane(id)
+);
+
+CREATE TABLE test_db_pilot_request (
+    id                  UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    status              requestStatus   NOT NULL DEFAULT 'open',
+    operator_id         UUID            NOT NULL REFERENCES test_db_operator(id),
+    pilot_id            UUID            NOT NULL REFERENCES test_db_pilot(id),
+    price               BIGINT          NOT NULL,
+    destination_id      UUID            NOT NULL REFERENCES test_db_destination_info(id),
+    deadline            DATE            NULL,
+    request_comment     VARCHAR         NULL
+);
+
+CREATE TABLE test_db_pilot_flight (
+    id                      UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    start_date              DATE            NOT NULL,
+    end_date                DATE            NOT NULL,
+    current_latitude        FLOAT           NULL,
+    current_longitude       FLOAT           NULL,
+    request_id              UUID            NOT NULL REFERENCES test_db_pilot_request(id)
 );
