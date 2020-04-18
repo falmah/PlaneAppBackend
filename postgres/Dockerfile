@@ -15,10 +15,10 @@ COPY . .
 
 RUN /etc/init.d/postgresql start  && \
     psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" && \
-    createdb -O docker test_db && \
-    psql -d test_db --file /scripts/types.sql && \
-    psql -d test_db --file /scripts/tables.sql && \
-    psql -d test_db --file /scripts/csvImport.sql
+    createdb -O docker app_db && \
+    psql -d app_db --file /scripts/types.sql && \
+    psql -d app_db --file /scripts/tables.sql && \
+    psql -d app_db --file /scripts/csvImport.sql
 
 RUN echo "host  all all 0.0.0.0/0   md5" >> /etc/postgresql/12/main/pg_hba.conf
 RUN echo "hostnossl  all all  0.0.0.0/0   md5" >> /etc/postgresql/12/main/pg_hba.conf
