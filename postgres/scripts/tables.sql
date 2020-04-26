@@ -13,11 +13,6 @@ CREATE TABLE app_db_city (
     country_id  SMALLINT    NOT NULL REFERENCES app_db_country(id)
 );
 
-CREATE TABLE app_db_role (
-    id          UUID        DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
-    user_role   userType    NOT NULL
-);
-
 CREATE TABLE app_db_user (
 	id	        UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
 	name    	VARCHAR(200)	NOT NULL,
@@ -26,8 +21,7 @@ CREATE TABLE app_db_user (
     email       CHAR(50)        NOT NULL,
     created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	password    VARCHAR(100) 	NOT NULL,
-    role_id     UUID            NOT NULL REFERENCES app_db_role(id),
-    rating      BIGINT          NOT NULL DEFAULT 0 
+    role        userType        NOT NULL
 );
 
 CREATE TABLE app_db_airport (
@@ -126,13 +120,13 @@ CREATE TABLE app_db_pilot_request (
     operator_id         UUID            NOT NULL REFERENCES app_db_operator(id),
     pilot_id            UUID            NOT NULL REFERENCES app_db_pilot(id),
     price               BIGINT          NOT NULL,
-    destination_id      UUID            NOT NULL REFERENCES app_db_destination_info(id),
     required_license    licenceType     NOT NULL,
     required_visa       licenceType     NOT NULL,
     deadline            DATE            NULL,
     request_type        BIGINT          NULL,
     request_comment     VARCHAR         NULL,
-    ticket_id           UUID            NOT NULL REFERENCES app_db_ticket(id)    
+    ticket_id           UUID            NOT NULL REFERENCES app_db_ticket(id),
+    plane_id            UUID            NOT NULL REFERENCES app_db_plane(id)
 );
 
 CREATE TABLE operator_plane_bridge (
