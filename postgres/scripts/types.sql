@@ -7,6 +7,7 @@ CREATE TYPE requestStatus AS ENUM ('open', 'pending', 'completed', 'rejected', '
 CREATE TYPE userType AS ENUM ('admin', 'pilot', 'operator', 'customer');
 CREATE TYPE licenceType AS ENUM ('license_1');
 CREATE TYPE visaType AS ENUM ('visa_1');
+CREATE TYPE cargoType AS ENUM ('passenger', 'commodity')
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 

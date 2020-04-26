@@ -14,13 +14,13 @@ CREATE TABLE app_db_city (
 );
 
 CREATE TABLE app_db_user (
-	id	        UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
-	name    	VARCHAR(200)	NOT NULL,
-    surname    	VARCHAR(200)	NOT NULL,
+    id          UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+    name        VARCHAR(200)    NOT NULL,
+    surname    	VARCHAR(200)    NOT NULL,
     phone       CHAR(15)        NOT NULL,
     email       CHAR(50)        NOT NULL,
     created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	password    VARCHAR(100) 	NOT NULL,
+    password    VARCHAR(100)    NOT NULL,
     role        userType        NOT NULL
 );
 
@@ -39,17 +39,6 @@ CREATE TABLE app_db_plane (
     registration_id         CHAR(30)        NOT NULL,
     plane_type              VARCHAR(50)     NOT NULL,
     current_location        UUID            NOT NULL REFERENCES app_db_airport(id)
-);
-
-CREATE TABLE app_db_destination_info (
-    id              UUID    DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
-    from_id         UUID    NOT NULL REFERENCES app_db_airport(id),
-    from_latitude   FLOAT   NOT NULL,
-    from_longitude  FLOAT   NOT NULL,
-    to_id           UUID    NOT NULL REFERENCES app_db_airport(id),
-    to_latitude     FLOAT   NOT NULL,
-    to_longitude    FLOAT   NOT NULL,
-    plane_id        UUID    NOT NULL REFERENCES app_db_plane(id)
 );
 
 CREATE TABLE app_db_operator (
@@ -105,13 +94,14 @@ CREATE TABLE app_db_ticket (
     id              UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
     customer_id     UUID            NOT NULL REFERENCES app_db_customer(id),
     status          requestStatus   NOT NULL DEFAULT 'open',
+    cargo_type      cargoType       NOT NULL,
     title           VARCHAR(200)    NOT NULL,
     date_from       DATE            NOT NULL,
     date_to         DATE            NOT NULL,
     dest_from       UUID            NOT NULL REFERENCES app_db_airport(id),
     dest_to         uuid            NOT NULL REFERENCES app_db_airport(id),
     price           BIGINT          NOT NULL,
-    ticket_comment  VARCHAR         NULL
+    ticket_comment  VARCHAR         NOT NULL
 );
 
 CREATE TABLE app_db_pilot_request (
@@ -122,16 +112,11 @@ CREATE TABLE app_db_pilot_request (
     price               BIGINT          NOT NULL,
     required_license    licenceType     NOT NULL,
     required_visa       licenceType     NOT NULL,
-    deadline            DATE            NULL,
-    request_type        BIGINT          NULL,
-    request_comment     VARCHAR         NULL,
+    deadline            DATE            NOT NULL,
+    request_type        BIGINT          NOT NULL,
+    request_comment     VARCHAR         NOT NULL,
     ticket_id           UUID            NOT NULL REFERENCES app_db_ticket(id),
     plane_id            UUID            NOT NULL REFERENCES app_db_plane(id)
-);
-
-CREATE TABLE operator_plane_bridge (
-  plane_id      UUID NOT NULL REFERENCES app_db_plane(id),
-  operator_id   UUID NOT NULL REFERENCES app_db_operator(id)
 );
 
 CREATE TABLE app_db_pilot_flight (
