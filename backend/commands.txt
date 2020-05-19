@@ -1,0 +1,2 @@
+docker run -dit --net app_net --rm -v /home/user/go_env:/home/go/src --name go_env go_test
+
