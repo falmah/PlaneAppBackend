@@ -36,7 +36,7 @@ CREATE TABLE app_db_airport (
 CREATE TABLE app_db_plane (
     id                      UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
     name                    VARCHAR(200)    NOT NULL,
-    registration_prefix     VARCHAR(7)      NOT NULL,
+    registration_prefix     VARCHAR(15)      NOT NULL,
     registration_id         VARCHAR(30)     NOT NULL,
     plane_type              VARCHAR(50)     NOT NULL,
     current_location        UUID            NOT NULL REFERENCES app_db_airport(id)
@@ -51,7 +51,7 @@ CREATE TABLE app_db_operator (
 
 CREATE TABLE app_db_pilot (
     id	                UUID        DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
-    busy                BOOLEAN     NOT NULL,
+    busy                BOOLEAN     DEFAULT FALSE NOT NULL,
     current_location    BIGINT      NOT NULL REFERENCES app_db_city(id),
     user_id             UUID        NOT NULL REFERENCES app_db_user(id)
 );
@@ -65,7 +65,7 @@ CREATE TABLE app_db_license (
     id              UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
     name            VARCHAR(50)     NOT NULL,
     license_type    licenceType     NOT NULL,
-    image           OID             NOT NULL,
+    image           BYTEA           NULL,
     is_active       BOOLEAN         NOT NULL DEFAULT FALSE,
     pilot_id        UUID            NOT NULL REFERENCES     app_db_pilot(id)
 );
@@ -74,7 +74,7 @@ CREATE TABLE app_db_visa (
     id              UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
     name            VARCHAR(50)     NOT NULL,
     visa_type       visaType        NOT NULL,
-    image           OID             NOT NULL,
+    image           BYTEA           NULL,
     is_active       BOOLEAN         NOT NULL DEFAULT FALSE,
     pilot_id        UUID            NOT NULL REFERENCES app_db_pilot(id)
 );
@@ -114,7 +114,6 @@ CREATE TABLE app_db_pilot_request (
     required_license    licenceType     NOT NULL,
     required_visa       visaType        NOT NULL,
     deadline            DATE            NOT NULL,
-    request_type        BIGINT          NOT NULL,
     request_comment     VARCHAR         NOT NULL,
     ticket_id           UUID            NOT NULL REFERENCES app_db_ticket(id),
     plane_id            UUID            NOT NULL REFERENCES app_db_plane(id)

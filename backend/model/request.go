@@ -15,7 +15,6 @@ type Request struct {
 	Required_license	string		`gorm:"type:licenceType" json:"required_license"`
 	Required_visa       string     	`gorm:"type:visaType" json:"required_visa"`
 	Deadline			time.Time	`gorm:"type:DATE" json:"deadline"`
-	Request_type        uint        `gorm:"type:bigint" json:"request_type"`
 	Request_comment		string		`gorm:"type:varchar" json:"request_comment"`
 	Ticket_id			string		`gorm:"type:uuid" json:"-"`
 	Ticket				Ticket		`gorm:"foreignkey:Id;association_foreignkey:ticket_id" json:"ticket"`

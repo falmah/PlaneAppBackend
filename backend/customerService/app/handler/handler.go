@@ -27,12 +27,6 @@ func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 func respondError(w http.ResponseWriter, code int, message string) {
 	respondJSON(w, code, map[string]string{"error": message})
 }
-/*
-func GetAllProjects(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	projects := []model.Project{}
-	db.Find(&projects)
-	respondJSON(w, http.StatusOK, projects)
-}*/
 
 func GetTicket(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -85,8 +79,8 @@ func CreateTicket(w http.ResponseWriter, r *http.Request) {
 	c.Customer_id = customer
 	c.Date_from, _ = time.Parse("2006-01-02", t.Date_from)
 	c.Date_to, _ = time.Parse("2006-01-02", t.Date_to)
-	c.Dest_from = t.Dest_from
-	c.Dest_to = t.Dest_to
+	c.Dest_from = customerDriver.GetAirportId(t.Dest_from)
+	c.Dest_to = customerDriver.GetAirportId(t.Dest_to)
 	c.Price = t.Price
 	c.Ticket_comment = t.Ticket_comment 
 
@@ -125,10 +119,12 @@ func UpdateTicket(w http.ResponseWriter, r *http.Request) {
 	c.Customer_id = customer
 	c.Date_from, _ = time.Parse("2006-01-02", t.Date_from)
 	c.Date_to, _ = time.Parse("2006-01-02", t.Date_to)
-	c.Dest_from = t.Dest_from
-	c.Dest_to = t.Dest_to
+	c.Dest_from = customerDriver.GetAirportId(t.Dest_from)
+	c.Dest_to = customerDriver.GetAirportId(t.Dest_to)
 	c.Price = t.Price
 	c.Ticket_comment = t.Ticket_comment
+
+	fmt.Println(c);
 
 	customerDriver.UpdateTicket(customer, &c)
 	respondJSON(w, http.StatusOK, c)

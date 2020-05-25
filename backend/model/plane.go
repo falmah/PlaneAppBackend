@@ -8,7 +8,6 @@ type Plane struct {
 	Plane_type     		string  	`gorm:"type:varchar(50)" json:"plane_type"`
 	Current_location	string		`gorm:"type:uuid" json:"-"`
 	Current_location_s	Airport		`gorm:"foreignkey:Id;association_foreignkey:current_location" json:"current_location"`
-	//Operators 			[]Operator	`gorm:"many2many:app_db_operator_plane_bridge;association_foreignkey:plane_id;foreignkey:Id"`
 }
 
 func (Plane) TableName() string {

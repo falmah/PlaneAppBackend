@@ -20,6 +20,7 @@ func (a *App) Initialize() {
 
 func (a *App) setRouters() {
 	// Routing for handling the projects
+	a.Get("/operator/pilot/{operator}/all", a.handleRequest(handler.GetPilots))
 	a.Get("/operator/ticket/{operator}/all", a.handleRequest(handler.GetTickets))
 	a.Get("/operator/plane/{operator}/all", a.handleRequest(handler.GetPlanes))
 	a.Get("/operator/plane/{operator}/get/{plane}", a.handleRequest(handler.GetPlane))

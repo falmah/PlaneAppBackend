@@ -22,6 +22,7 @@ func (a *App) setRouters() {
 	// Routing for handling the projects
 	a.Post("/register", a.handleRequest(handler.RegisterUser))
 	a.Post("/login", a.handleRequest(handler.GetUser))
+	a.Get("/cities", a.handleRequest(handler.GetCities))
 	/*a.Post("/projects", a.handleRequest(handler.CreateProject))
 	a.Get("/projects/{title}", a.handleRequest(handler.GetProject))
 	a.Put("/projects/{title}", a.handleRequest(handler.UpdateProject))
@@ -43,14 +44,14 @@ func (a *App) setRouters() {
 func (a *App) Post(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("POST")
 }
-/*
+
 // Get wraps the router for GET method
 func (a *App) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("GET")
 }
 
 
-
+/*
 // Put wraps the router for PUT method
 func (a *App) Put(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("PUT")

@@ -3,7 +3,6 @@ services:
     postgres:
         build:
             context: ./postgres
-            #network: app_net
         container_name: postgres
         networks:
             app_net:
@@ -13,7 +12,6 @@ services:
     proxy:
         build:
             context: ./nginx
-            #network: app_net
         container_name: proxy
         networks:
             app_net:
@@ -31,6 +29,24 @@ services:
                 ipv4_address: 172.18.0.4
         ports:
             - "5001:5000"
+    customer_service:
+        build:
+            context: ./backend/customerService
+        container_name: customer_service
+        networks:
+            app_net:
+                ipv4_address: 172.18.0.5
+        ports:
+            - "5002:5000"
+    operator_service:
+        build:
+            context: ./backend/operatorService
+        container_name: operator_service
+        networks:
+            app_net:
+                ipv4_address: 172.18.0.6
+        ports:
+            - "5003:5000"
 networks:
     app_net:
         ipam:

@@ -210,3 +210,27 @@ func GetPilot(user model.User) model.Pilot {
 
 	return pilot
 }
+
+func GetCities() []model.City {
+	cities := []model.City{}
+
+	db := openConnection()
+	if db == nil {
+		log.Error("get ticket failed")
+		return cities
+	}
+	defer db.Close()
+
+	if err := db.Find(&cities).Error; err != nil {
+		fmt.Println("cannot find cities")
+		return cities
+	}
+
+	for i := range cities {
+		db.Preload("Country").First(&cities[i])
+	}
+	
+	db.Close()
+
+	return cities
+}

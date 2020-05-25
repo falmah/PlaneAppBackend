@@ -29,7 +29,8 @@ type Airport struct {
     Name        string  `gorm:"type:varchar(200)" json:"name"`
     Latitude    float32	`gorm:"type:float" json:"latitude"`
     Longitude   float32 `gorm:"type:float" json:"longitude"`
-    City_id     uint    `gorm:"type:bigint" json:"-"`
+	City_id     uint    `gorm:"type:bigint" json:"-"`
+	City		City	`gorm:"foreignkey:Id;association_foreignkey:City_id" json:"city"`
 }
 
 func (Airport) TableName() string {

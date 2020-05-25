@@ -18,7 +18,8 @@ RUN /etc/init.d/postgresql start  && \
     createdb -O docker app_db && \
     psql -d app_db --file /scripts/types.sql && \
     psql -d app_db --file /scripts/tables.sql && \
-    psql -d app_db --file /scripts/csvImport.sql
+    psql -d app_db --file /scripts/csvImport.sql && \
+    psql -d app_db --file /scripts/initialData.sql
 
 RUN echo "host  all all 0.0.0.0/0   md5" >> /etc/postgresql/12/main/pg_hba.conf
 RUN echo "hostnossl  all all  0.0.0.0/0   md5" >> /etc/postgresql/12/main/pg_hba.conf

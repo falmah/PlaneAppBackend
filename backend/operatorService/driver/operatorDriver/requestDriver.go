@@ -93,7 +93,8 @@ func GetRequests(operator string) []model.Request {
 	}
 	defer db.Close()
 
-	if err := db.Find(&requests).Error; err != nil {
+	if err := db.Where("status != 'closed' AND operator_id = ?", operator).
+						Find(&requests).Error; err != nil {
 		fmt.Println("cannot find requests")
 		return requests
 	}
@@ -103,10 +104,10 @@ func GetRequests(operator string) []model.Request {
 			Preload("Operator.City.Country").
 			Preload("Pilot.User").
 			Preload("Pilot.City.Country").
-			Preload("Ticket.Dest_from_s").
-			Preload("Ticket.Dest_to_s").
+			Preload("Ticket.Dest_from_s.City.Country").
+			Preload("Ticket.Dest_to_s.City.Country").
 			Preload("Ticket.Customer.User").
-			Preload("Plane.Current_location_s").
+			Preload("Plane.Current_location_s.City.Country").
 			First(&requests[i])							
 	}
 	

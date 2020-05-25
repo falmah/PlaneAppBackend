@@ -77,6 +77,7 @@ func GetPlanes(w http.ResponseWriter, r *http.Request) {
 	operator := vars["operator"]
 	pl := operatorDriver.GetPlanes(operator)
 	fmt.Println(pl)
+	respondJSON(w, http.StatusOK, pl)
 }
 
 func UpdatePlane(w http.ResponseWriter, r *http.Request) {
@@ -120,10 +121,6 @@ func GetPlane(w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, pl)
 }
 
-
-
-
-
 func CreateRequest(w http.ResponseWriter, r *http.Request) {
 	type Tmp struct {
 		Status 				string
@@ -132,7 +129,6 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 		Price				uint
 		Required_visa       string
 		Deadline			string
-		Request_type        uint
 		Request_comment		string
 		Ticket_id			string
 		Plane_id            string
@@ -155,7 +151,6 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 	req.Pilot_id = t.Pilot_id
 	req.Ticket_id = t.Ticket_id
 	req.Plane_id = t.Plane_id
-	req.Request_type = t.Request_type
 	req.Request_comment = t.Request_comment
 
 	//fmt.Println(req)
@@ -185,7 +180,6 @@ func UpdateRequest(w http.ResponseWriter, r *http.Request) {
 		Price				uint
 		Required_visa       string
 		Deadline			string
-		Request_type        uint
 		Request_comment		string
 		Ticket_id			string
 		Plane_id            string
@@ -210,7 +204,6 @@ func UpdateRequest(w http.ResponseWriter, r *http.Request) {
 	req.Pilot_id = t.Pilot_id
 	req.Ticket_id = t.Ticket_id
 	req.Plane_id = t.Plane_id
-	req.Request_type = t.Request_type
 	req.Request_comment = t.Request_comment
 
 	operatorDriver.UpdateRequest(operator, &req)
@@ -236,6 +229,15 @@ func GetRequests(w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, tic)
 }
 
+func GetPilots(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	operator := vars["operator"]
+
+	pil := operatorDriver.GePilots(operator)
+	fmt.Println(pil)
+
+	respondJSON(w, http.StatusOK, pil)
+}
 /*
 func GetPlanes(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)

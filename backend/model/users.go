@@ -47,8 +47,7 @@ type Operator struct {
 	City_id			uint	`gorm:"type:bigint" json:"-"`
 	City			City	`gorm:"foreignkey:Id;association_foreignkey:city_id" json:"city"`
 	User_id 		string  `gorm:"type:UUID" json:"-"`
-	User 			User 	`gorm:"foreignkey:Id;association_foreignkey:user_id"`
-	//Planes			[]Plane	`gorm:"many2many:app_db_operator_plane_bridge;association_foreignkey:operator_id;foreignkey:Id" json:"-"`
+	User 			User 	`gorm:"foreignkey:Id;association_foreignkey:user_id" json:"user"`
 }
 
 func (Operator) TableName() string {
@@ -59,13 +58,13 @@ func (o *Operator) BeforeCreate(db *gorm.DB) {
 	o.User_id = createUser(db, o.User)
 }
 
-type Pilot struct{
+type Pilot struct {
 	Id 					string  `gorm:"type:UUID;primary_key" json:"id"`
 	Busy 				bool	`gorm:"type:boolean" json:"busy"`
 	Current_location	uint	`gorm:"type:bigint" json:"-"`
 	City 				City	`gorm:"foreignkey:Id;association_foreignkey:current_location" json:"city"`
 	User_id 			string  `gorm:"type:UUID" json:"-"`
-	User 				User 	`gorm:"foreignkey:Id;association_foreignkey:user_id"`
+	User 				User 	`gorm:"foreignkey:Id;association_foreignkey:user_id" json:"user"`
 }
 
 func (Pilot) TableName() string {
