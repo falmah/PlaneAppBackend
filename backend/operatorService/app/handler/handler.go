@@ -27,12 +27,6 @@ func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 func respondError(w http.ResponseWriter, code int, message string) {
 	respondJSON(w, code, map[string]string{"error": message})
 }
-/*
-func GetAllProjects(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
-	projects := []model.Project{}
-	db.Find(&projects)
-	respondJSON(w, http.StatusOK, projects)
-}*/
 
 func GetTickets(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -50,7 +44,7 @@ func CreatePlane(w http.ResponseWriter, r *http.Request) {
 		Registration_prefix string
 		Registration_id     string
 		Plane_type     		string
-		Current_location	string	
+		Current_location	string
 	}
 	vars := mux.Vars(r)
 	operator := vars["operator"]
@@ -64,7 +58,7 @@ func CreatePlane(w http.ResponseWriter, r *http.Request) {
 	var p model.Plane
 	json.Unmarshal([]byte(jsonStr), &t)
 	json.Unmarshal([]byte(jsonStr), &p)
-	p.Current_location = t.Current_location
+	p.Current_location = operatorDriver.GetAirportId(t.Current_location)
 	fmt.Println(p)
 
 	operatorDriver.CreatePlane(operator, &p)
@@ -102,7 +96,7 @@ func UpdatePlane(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal([]byte(jsonStr), &t)
 	json.Unmarshal([]byte(jsonStr), &p)
 	p.Id = plane
-	p.Current_location = t.Current_location
+	p.Current_location = operatorDriver.GetAirportId(t.Current_location)
 	fmt.Println(p)
 
 	operatorDriver.UpdatePlane(operator, &p)

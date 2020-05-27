@@ -63,18 +63,20 @@ CREATE TABLE app_db_operator_plane_bridge (
 
 CREATE TABLE app_db_license (
     id              UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
-    name            VARCHAR(50)     NOT NULL,
+    name            VARCHAR(100)    NOT NULL,
     license_type    licenceType     NOT NULL,
-    image           BYTEA           NULL,
+    image           OID             NULL,
+    image_size      BIGINT          NULL,
     is_active       BOOLEAN         NOT NULL DEFAULT FALSE,
     pilot_id        UUID            NOT NULL REFERENCES     app_db_pilot(id)
 );
 
 CREATE TABLE app_db_visa (
     id              UUID            DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
-    name            VARCHAR(50)     NOT NULL,
+    name            VARCHAR(100)    NOT NULL,
     visa_type       visaType        NOT NULL,
-    image           BYTEA           NULL,
+    image           OID             NULL,
+    image_size      BIGINT          NULL,
     is_active       BOOLEAN         NOT NULL DEFAULT FALSE,
     pilot_id        UUID            NOT NULL REFERENCES app_db_pilot(id)
 );

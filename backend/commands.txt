@@ -1,2 +1,2 @@
-docker run -dit --net app_net --rm -v /home/user/go_env:/home/go/src --name go_env go_test
+docker run -dit --net app_net -p 3000:3000 --rm -v /home/user/go_env:/home/go/src --name go_env base_image
 
