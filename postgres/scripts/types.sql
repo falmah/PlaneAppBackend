@@ -5,8 +5,8 @@ GRANT CREATE ON SCHEMA public TO PUBLIC;
 
 CREATE TYPE requestStatus AS ENUM ('open', 'pending', 'completed', 'rejected', 'closed');
 CREATE TYPE userType AS ENUM ('admin', 'pilot', 'operator', 'customer');
-CREATE TYPE licenceType AS ENUM ('license_1');
-CREATE TYPE visaType AS ENUM ('visa_1');
+CREATE TYPE licenceType AS ENUM ('sport', 'recreational', 'private', 'commersial', 'flight instructor', 'airline transport');
+CREATE TYPE visaType AS ENUM ('temporary worker', 'arrival');
 CREATE TYPE cargoType AS ENUM ('passenger', 'commodity');
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

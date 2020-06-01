@@ -19,7 +19,15 @@ func (a *App) Initialize() {
 }
 
 func (a *App) setRouters() {
-	a.Post("/pilot/license/create/img", a.handleRequest(handler.ImageTest))
+	a.Post("/pilot/license/{license}/create/img/{oid}", a.handleRequest(handler.WriteImage))
+	a.Get("/pilot/license/{license}/get/img/{oid}", a.handleRequest(handler.GetImage))
+	
+	a.Post("/pilot/license/{pilot}/create", a.handleRequest(handler.CreateLicense))
+	//a.Get("/pilot/license/{pilot}/delete/{license}", a.handleRequest(handler.DeleteLicense))
+	a.Get("/pilot/license/{pilot}/all", a.handleRequest(handler.GetLicenses))
+	a.Get("/pilot/request/{pilot}/all", a.handleRequest(handler.GetRequests))
+	a.Get("/pilot/request/{pilot}/status/{request}/{status}", a.handleRequest(handler.ChangeRequestStatus))
+	//a.Post("/pilot/license/create/img", a.handleRequest(handler.ImageTest))
 }
 ///pilot/license/{operator}/create/img
 // Post wraps the router for POST method
@@ -31,7 +39,6 @@ func (a *App) Post(path string, f func(w http.ResponseWriter, r *http.Request)) 
 func (a *App) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("GET")
 }
-
 
 /*
 // Put wraps the router for PUT method

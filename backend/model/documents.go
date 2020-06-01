@@ -7,8 +7,8 @@ type License struct {
 	Image     			uint  		`gorm:"type:OID" json:"image"`
 	Image_size     		uint  		`gorm:"type:bigint" json:"image_size"`
 	Is_active			bool		`gorm:"type:boolean" json:"is_active"`
-	pilot_id			string		`gorm:"type:uuid" json:"-"`
-	Pilot				Pilot		`gorm:"foreignkey:Id;association_foreignkey:current_location" json:"pilot"`
+	Pilot_id			string		`gorm:"type:uuid" json:"-"`
+	Pilot				Pilot		`gorm:"foreignkey:Id;association_foreignkey:Pilot_id" json:"pilot"`
 }
 
 func (License) TableName() string {
@@ -18,12 +18,12 @@ func (License) TableName() string {
 type Visa struct {
 	Id 					string		`gorm:"type:uuid;primary_key" json:"id"`
 	Name 				string		`gorm:"type:varchar(200)" json:"name"`
-	Visa_type 			string  	`gorm:"type:licenceType" json:"visa_type"`
+	Visa_type 			string  	`gorm:"type:visaType" json:"visa_type"`
 	Image     			uint  		`gorm:"type:OID" json:"image"`
 	Image_size     		uint  		`gorm:"type:bigint" json:"image_size"`
 	Is_active			bool		`gorm:"type:boolean" json:"is_active"`
-	pilot_id			string		`gorm:"type:uuid" json:"-"`
-	Pilot				Pilot		`gorm:"foreignkey:Id;association_foreignkey:current_location" json:"pilot"`
+	Pilot_id			string		`gorm:"type:uuid" json:"-"`
+	Pilot				Pilot		`gorm:"foreignkey:Id;association_foreignkey:Pilot_id" json:"pilot"`
 }
 
 func (Visa) TableName() string {

@@ -137,6 +137,28 @@ func DeleteTicket(w http.ResponseWriter, r *http.Request) {
 	customerDriver.DeleteTicket(customer, ticket)
 	respondJSON(w, http.StatusOK, nil)
 }
+
+func GetProposals(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	customer := vars["customer"]
+
+	fmt.Println(customer)
+	tic := customerDriver.GetProposals(customer)
+	fmt.Println(tic)
+
+	respondJSON(w, http.StatusOK, tic)
+}
+
+func ChangeProposalStatus(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	customer := vars["customer"]
+	status := vars["status"]
+	proposal := vars["proposal"]
+
+	customerDriver.ChangeProposalStatus(customer, status, proposal)
+
+	respondJSON(w, http.StatusOK, nil)
+}
 /*
 func CreateProject(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 	project := model.Project{}

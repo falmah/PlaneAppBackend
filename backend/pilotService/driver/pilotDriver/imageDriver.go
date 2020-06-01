@@ -44,13 +44,13 @@ func ReadImage(oid int, size int) []byte {
 	return []byte(buf[0])
 }
 
-func CreateOid() int {
+func CreateOid() uint {
 	db := openConnection();
 	if db == nil {
 		log.Error("Operator check failed")
-		return -1;
+		return 0;
 	}
-	var lo [] int
+	var lo [] uint
 
 	//24578
 	db.Debug().Raw("SELECT pg_catalog.lo_creat(393216);").Pluck("lo_creat", &lo)

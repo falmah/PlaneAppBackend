@@ -118,14 +118,14 @@ func GetPlane(w http.ResponseWriter, r *http.Request) {
 func CreateRequest(w http.ResponseWriter, r *http.Request) {
 	type Tmp struct {
 		Status 				string
-		Pilot_id 			string
+		Pilot 				string
 		Required_license	string
 		Price				uint
 		Required_visa       string
 		Deadline			string
 		Request_comment		string
 		Ticket_id			string
-		Plane_id            string
+		Plane 		        string
 	}
 	vars := mux.Vars(r)
 	operator := vars["operator"]
@@ -141,13 +141,15 @@ func CreateRequest(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal([]byte(jsonStr), &req)
 
 	req.Operator_id = operator
+	req.Required_license = t.Required_license
+	req.Required_visa = t.Required_visa
 	req.Deadline, _ = time.Parse("2006-01-02", t.Deadline)
-	req.Pilot_id = t.Pilot_id
+	req.Pilot_id = operatorDriver.GetPilot(t.Pilot)
 	req.Ticket_id = t.Ticket_id
-	req.Plane_id = t.Plane_id
+	req.Plane_id = operatorDriver.GetPlaneName(operator, t.Plane)
 	req.Request_comment = t.Request_comment
-
-	//fmt.Println(req)
+	fmt.Println("=================================================")
+	fmt.Println(req)
 
 	operatorDriver.CreateRequest(operator, &req)
 
@@ -169,14 +171,14 @@ func GetRequest(w http.ResponseWriter, r *http.Request) {
 func UpdateRequest(w http.ResponseWriter, r *http.Request) {
 	type Tmp struct {
 		Status 				string
-		Pilot_id 			string
+		Pilot 				string
 		Required_license	string
 		Price				uint
 		Required_visa       string
 		Deadline			string
 		Request_comment		string
 		Ticket_id			string
-		Plane_id            string
+		Plane 		        string
 	}
 	vars := mux.Vars(r)
 	operator := vars["operator"]
@@ -195,9 +197,9 @@ func UpdateRequest(w http.ResponseWriter, r *http.Request) {
 	req.Id = request
 	req.Operator_id = operator
 	req.Deadline, _ = time.Parse("2006-01-02", t.Deadline)
-	req.Pilot_id = t.Pilot_id
+	req.Pilot_id = operatorDriver.GetPilot(t.Pilot)
 	req.Ticket_id = t.Ticket_id
-	req.Plane_id = t.Plane_id
+	req.Plane_id = operatorDriver.GetPlaneName(operator, t.Plane)
 	req.Request_comment = t.Request_comment
 
 	operatorDriver.UpdateRequest(operator, &req)

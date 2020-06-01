@@ -86,7 +86,7 @@ func GetTickets(customer string) []model.Ticket {
 	}
 	defer db.Close()
 
-	if err := db.Debug().Where("status != 'closed' AND customer_id = ?", customer).
+	if err := db.Where("status != 'closed' AND customer_id = ?", customer).
 						Find(&tickets).Error; err != nil {
 		fmt.Println("cannot find tickets")
 		return tickets

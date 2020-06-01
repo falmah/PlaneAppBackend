@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "encoding/json"
+	"model"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -17,4 +18,19 @@ func openConnection() *gorm.DB {
 		return nil
 	}
 	return db
+}
+
+func checkPilot(id string) bool {
+	db := openConnection()
+	if db == nil {
+		log.Error("Pilot check failed")
+		return false
+	}
+
+	var op model.Pilot
+	if db.First(&op, "id = ?", id).RecordNotFound() {
+		return false
+	}
+
+	return true
 }

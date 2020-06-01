@@ -31,6 +31,33 @@ func CreatePlane(operator string, plane *model.Plane) {
 	return
 }
 
+func GetPlaneName(operator string, name string) string {
+	plane_o := model.Plane{}
+
+	if !checkOperator(operator) {
+		log.Errorf("Operator id %s does not exist", operator)
+		return ""
+	}
+
+	db := openConnection()
+	if db == nil {
+		log.Error("get ticket failed")
+		return ""
+	}
+	defer db.Close()
+
+	if err := db.First(&plane_o, model.Plane{Name: name}).Error; err != nil {
+		fmt.Println("cannot find plane")
+		return ""
+	}
+
+	db.Preload("Current_location_s").First(&plane_o)
+
+	db.Close()
+
+	return plane_o.Id
+}
+
 func GetPlane(operator string, plane string) model.Plane {
 	plane_o := model.Plane{}
 
@@ -61,7 +88,7 @@ func GetPlane(operator string, plane string) model.Plane {
 func GetPlanes(operator string) []model.Plane {
 
 	var plane_ids []string
-	var planes []model.Plane
+	planes := []model.Plane{}
 
 	if !checkOperator(operator) {
 		log.Errorf("operator id %s does not exist", operator)

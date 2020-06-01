@@ -25,6 +25,8 @@ func (a *App) setRouters() {
 	a.Get("/customer/ticket/{customer}/all", a.handleRequest(handler.GetTickets))
 	a.Post("/customer/ticket/{customer}/create",a.handleRequest(handler.CreateTicket))
 	a.Post("/customer/ticket/{customer}/update/{ticket}",a.handleRequest(handler.UpdateTicket))
+	a.Get("/customer/proposal/{customer}/all", a.handleRequest(handler.GetProposals))
+	a.Get("/customer/proposal/{customer}/status/{proposal}/{status}", a.handleRequest(handler.ChangeProposalStatus))
 }
 
 // Post wraps the router for POST method
