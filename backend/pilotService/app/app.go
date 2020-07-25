@@ -21,10 +21,14 @@ func (a *App) Initialize() {
 func (a *App) setRouters() {
 	a.Post("/pilot/license/{license}/create/img/{oid}", a.handleRequest(handler.WriteImage))
 	a.Get("/pilot/license/{license}/get/img/{oid}", a.handleRequest(handler.GetImage))
-	
 	a.Post("/pilot/license/{pilot}/create", a.handleRequest(handler.CreateLicense))
+	a.Post("/pilot/visa/{visa}/create/img/{oid}", a.handleRequest(handler.WriteVisaImage))
+	a.Get("/pilot/visa/{visa}/get/img/{oid}", a.handleRequest(handler.GetVisaImage))
+	a.Post("/pilot/visa/{pilot}/create", a.handleRequest(handler.CreateVisa))
+
 	//a.Get("/pilot/license/{pilot}/delete/{license}", a.handleRequest(handler.DeleteLicense))
 	a.Get("/pilot/license/{pilot}/all", a.handleRequest(handler.GetLicenses))
+	a.Get("/pilot/visa/{pilot}/all", a.handleRequest(handler.GetVisas))
 	a.Get("/pilot/request/{pilot}/all", a.handleRequest(handler.GetRequests))
 	a.Get("/pilot/request/{pilot}/status/{request}/{status}", a.handleRequest(handler.ChangeRequestStatus))
 	//a.Post("/pilot/license/create/img", a.handleRequest(handler.ImageTest))

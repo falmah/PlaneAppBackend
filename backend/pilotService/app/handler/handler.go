@@ -160,3 +160,80 @@ func ChangeRequestStatus(w http.ResponseWriter, r *http.Request) {
 
 	respondJSON(w, http.StatusOK, nil)
 }
+
+func WriteVisaImage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	visa := vars["visa"]
+	oid, _ := strconv.Atoi(vars["oid"])
+
+	var buf bytes.Buffer
+	r.ParseMultipartForm(32 << 20) // limit your max input length!
+
+	file, _, err := r.FormFile("fileupload")
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
+	defer file.Close()
+	io.Copy(&buf, file)
+
+	size := buf.Len()
+	data := hex.EncodeToString(buf.Next(size))
+
+	pilotDriver.WriteImage(oid, data)
+
+	pilotDriver.UpdateVisaImageSize(visa, size)
+
+	new_buf := pilotDriver.ReadImage(oid, size)
+	// copy example
+	f, err := os.OpenFile("./testfile.jpg", os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer f.Close()
+	io.Copy(f, bytes.NewBuffer(new_buf))
+
+}
+
+func GetVisaImage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	visa := vars["visa"]
+	//oid, _ := strconv.Atoi(vars["oid"])
+
+	lis := pilotDriver.GetVisa(visa)
+
+	new_buf := pilotDriver.ReadImage(int(lis.Image), int(lis.Image_size))
+	w.Header().Set("Content-Type", "image/jpeg")
+	io.Copy(w, bytes.NewBuffer(new_buf))
+
+}
+
+func CreateVisa(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	pilot := vars["pilot"]
+
+	bufs := new(bytes.Buffer)
+    bufs.ReadFrom(r.Body)
+	jsonStr := bufs.String()
+	fmt.Println(jsonStr)
+
+	var req model.Visa
+	json.Unmarshal([]byte(jsonStr), &req)
+	req.Pilot_id = pilot
+	req.Is_active = true
+	fmt.Println(req)
+
+	pilotDriver.CreateVisa(pilot, &req)
+
+	respondJSON(w, http.StatusCreated, req)
+}
+
+func GetVisas(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	pilot := vars["pilot"]
+
+	req := pilotDriver.GetVisas(pilot)
+	respondJSON(w, http.StatusOK, req)
+}
